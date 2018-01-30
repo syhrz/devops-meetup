@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  tasks:
+    - name: "create app security group"
+      ec2_group:
+          name: myapp-sg-ansible
+          description: "Allow SSH"
+          vpc_id: vpc-f8c91a9f
+          region: ap-southeast-1
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+      register: myapp-sg
+      tags:
+        managed_by: "ansible"
+
+    - name: "Create EC2 Instance(s)"
+      ec2:
+        key_name: dev
+        instance_type: t2.nano
+        image: ami-325d2e4e
+        wait: yes
+        count: 1
+        vpc_subnet_id: subnet-a362f5ea
+        assign_public_ip: yes
+        group:

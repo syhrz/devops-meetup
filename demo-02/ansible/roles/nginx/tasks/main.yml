@@ -1,0 +1,16 @@
+---
+# tasks file for nginx
+
+- block:
+    - name: install nginx
+      apt:
+        name: nginx
+        cache_valid_time: "{{ apt_cache_valid_time|default(omit) }}"
+        install_recommends: no
+        state: latest
+        update_cache: yes
+
+  become: yes
+  become_method: sudo
+  tags:
+    - nginx

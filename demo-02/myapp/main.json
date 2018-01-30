@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "service_name": "myapp",
+    "service_version":""
+  },
+  "builders": [{
+    "vpc_id": "vpc-f8c91a9f",
+    "subnet_id": "subnet-a362f5ea",
+    "type": "amazon-ebs",
+    "region": "ap-southeast-1",
+    "source_ami": "ami-325d2e4e",
+    "instance_type": "t2.nano",
+    "ssh_username": "ubuntu",
+    "ami_name": "{{ user `service_name` }}-{{ user `service_version` }}-{{ timestamp }}",
+    "associate_public_ip_address": "true",
+    "launch_block_device_mappings": [
+      {
+        "device_name": "/dev/sda1",
+        "volume_size": 8,
+        "volume_type": "gp2",
+        "delete_on_termination": true
+      }
+    ]
+  }],
+  "provisioners": [
+    {
+      "type": "shell",
+      "scripts": "../scripts/setup-ansible.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/playbooks/setup.yml",
+      "extra_arguments": [
+        "--extra-vars", "\"service_name={{ user `service_name` }} service_version={{ user `service_version` }} \""
+      ],
+      "role_paths": [
+        "../ansible/roles/apt-update",
+        "../ansible/roles/nginx",
+        "../ansible/roles/app-config"
+      ]
+    }
+  ]
+}

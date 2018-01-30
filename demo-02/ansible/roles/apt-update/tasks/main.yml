@@ -1,0 +1,22 @@
+---
+- block:
+  - name: Run the equivalent of "apt-get update"
+    apt:
+      update_cache: yes
+
+  - name: Run the equivalent of "apt-get upgrade"
+    apt:
+      upgrade: full
+
+  - name: Run the equivalent of "apt-get dist-upgrade"
+    apt:
+      upgrade: dist
+
+  - name: Run the equivalent of "apt-get autoremove"
+    apt:
+      autoremove: yes
+
+  become: true
+  become_method: sudo
+  tags:
+    - apt-update

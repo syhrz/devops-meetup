@@ -1,0 +1,21 @@
+Resources:
+  SG01:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: "myapp-security-group"
+      GroupDescription: "Allow SSH to myapp"
+      SecurityGroupIngress:
+       - IpProtocol: tcp
+         CidrIp: 0.0.0.0/0
+         FromPort: '22'
+         ToPort: '22'
+      VpcId: "vpc-f8c91a9f"
+
+  EC201:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-325d2e4e"
+      InstanceType: "t2.nano"
+      KeyName: "dev"
+      SecurityGroupIds:
+        - !Ref SG01
